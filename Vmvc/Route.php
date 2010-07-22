@@ -172,7 +172,11 @@ class Vmvc_Route
 
     protected function getParamsFromUri($uri)
     {
-        $params = explode('/', $uri);
+        // remove the ? seperator and parameters behind him
+        $paramsExt = explode('?', $uri);
+
+        // get the parameters seperated with /
+        $params = explode('/', $paramsExt[0]);
 
         // delete beginning and end if empty
         if($params[0]=='') {

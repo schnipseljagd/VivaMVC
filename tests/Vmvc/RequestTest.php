@@ -84,6 +84,13 @@ class Vmvc_RequestTest extends VmvcTestCase
         $this->assertSame(array('en', 'index', 'index'), $params);
     }
 
+    public function testGetUriWasNotFound()
+    {
+        $request = new Vmvc_Request(array(), array(), array());
+        $uri = $request->getUri();
+        $this->assertNull($uri);
+    }
+
     public function testGetVar()
     {
         $var = $this->object->getVar('controller');
@@ -128,6 +135,16 @@ class Vmvc_RequestTest extends VmvcTestCase
     public function testGetPostVars()
     {
         $this->assertType('array', $this->object->getPostVars());
+    }
+
+    public function testIsXmlHttpRequest()
+    {
+        $request = new Vmvc_Request(array(), array(),
+                                    array(
+                                        'HTTP_X_REQUESTED_WITH' => 'XMLHttpRequest',
+                                    ));
+        $result = $request->isXmlHttpRequest();
+        $this->assertTrue($result);
     }
 }
 ?>

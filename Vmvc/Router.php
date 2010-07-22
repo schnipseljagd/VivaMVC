@@ -73,6 +73,7 @@ class Vmvc_Router
     protected $defaultRoute;
 
     /**
+     * construct
      * @param Vmvc_Request $request
      */
 	public function __construct(Vmvc_Request $request)
@@ -80,11 +81,20 @@ class Vmvc_Router
         $this->request = $request;
     }
 
+    /**
+     *
+     * @param Vmvc_Route $route
+     */
     public function addRoute(Vmvc_Route $route)
     {
         $this->routes[] = $route;
     }
 
+    /**
+     *
+     * @param Vmvc_Route $defaultRoute
+     * @param string $defaultUri
+     */
     public function setDefaultRoute(Vmvc_Route $defaultRoute, $defaultUri)
     {
         if(!$defaultRoute->matches($defaultUri))
@@ -97,6 +107,10 @@ class Vmvc_Router
         $this->defaultUri = $defaultUri;
     }
 
+    /**
+     *
+     * @return Vmvc_Route
+     */
     public function getRoute()
     {
         if($this->activeRoute!==null) {
@@ -128,6 +142,10 @@ class Vmvc_Router
     {
         $requestUri = $this->request->getUri();
 
+        if($requestUri===null) {
+            return null;
+        }
+        
         foreach($this->routes as $route) {
             if($route->matches($requestUri)) {
                 return $route;

@@ -188,8 +188,7 @@ class Vmvc_Controller
         if($this->callObserver===null) {
             throw new Vmvc_Exception('callObserver is not set.');
         }
-        $this->callObserver->doExecute(strtolower($controllerName),
-                                       strtolower($controllerAction));
+        $this->callObserver->doExecute($controllerName, $controllerAction);
     }
 
     public function setViewScriptPath($viewScriptPath)

@@ -59,11 +59,14 @@ class Vmvc_ViewScript
      * @var array
      */
     protected $data;
-
     /**
      * @var array
      */
     protected $viewHelpers = array();
+    /**
+     * @var string
+     */
+    protected $path = '';
 
     /**
      * @param array|null $data
@@ -71,6 +74,17 @@ class Vmvc_ViewScript
     public function  __construct(array $data = null)
     {
         $this->data = $data;
+    }
+
+    /**
+     * @param string $path
+     */
+    public function setPath($path)
+    {
+        if(!is_string($path)) {
+            throw new InvalidArgumentException('path has to be a string.');
+        }
+        $this->path = $path . '/';
     }
 
     /**
@@ -179,13 +193,15 @@ class Vmvc_ViewScript
 
     /**
      * @param string $scriptPath
+     * @param string $scriptHeader
+     * @param string $scriptFooter
      * @return string
      */
     protected function doRender($scriptPath, $scriptHeader = '', $scriptFooter = '')
     {
         $script = $scriptHeader;
         ob_start();
-        include lcfirst($scriptPath) . '.php';
+        include $this->path . lcfirst($scriptPath) . '.php';
         $script .= ob_get_clean();
         $script .= $scriptFooter;
         return $script;

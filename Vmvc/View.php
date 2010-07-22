@@ -101,7 +101,11 @@ class Vmvc_View extends Vmvc_ViewScript
 
         $headers = $this->response->getHeaders();
 
-        $scriptHeader = $this->renderHeaders($headers);
+        if($this->httpResponse!==null) {
+            $scriptHeader = $this->renderHeaders($headers);
+        } else {
+            $scriptHeader = '';
+        }
         
         return $this->doRender($viewScriptPath, $scriptHeader);
     }

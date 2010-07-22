@@ -85,6 +85,8 @@ class Vmvc_FrontController implements Vmvc_ControllerCallObserverInterface
     }
 
     /**
+     * execute controller and render view
+     * get the viewScriptPath and the Controller from the ApplicationController
      * @param Vmvc_Controller $controller
      * @param Vmvc_View $view
      * @return string
@@ -130,6 +132,7 @@ class Vmvc_FrontController implements Vmvc_ControllerCallObserverInterface
         $status = $this->executeController();
 
         // render view
+        // TODO refactor this, should be done in the ApplicationController
         if($this->viewScriptPath===null) {
             $this->viewScriptPath = $this->getAppViewScript($status);
         }

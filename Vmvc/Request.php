@@ -71,6 +71,7 @@ class Vmvc_Request
     /**
      * @param array $vars
      * @param array $postVars
+     * @param array $serverVars
      */
     public function __construct(array $vars, array $postVars, array $serverVars)
     {
@@ -98,7 +99,7 @@ class Vmvc_Request
     public function getUri()
     {
         if(!isset($this->serverVars['REQUEST_URI'])) {
-            throw new Vmvc_Exception('request uri has to be set in serverVars.');
+            return null;
         }
         return $this->serverVars['REQUEST_URI'];
     }
@@ -159,8 +160,8 @@ class Vmvc_Request
      */
     public function isXmlHttpRequest()
     {
-        if(isset($this->serverVars['X-Requested-With'])
-           && $this->serverVars['X-Requested-With']=='XMLHttpRequest')
+        if(isset($this->serverVars['HTTP_X_REQUESTED_WITH'])
+           && $this->serverVars['HTTP_X_REQUESTED_WITH']=='XMLHttpRequest')
         {
             return true;
         }

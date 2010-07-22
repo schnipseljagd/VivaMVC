@@ -75,15 +75,16 @@ class Vmvc_RouterTest extends VmvcTestCase
                                                 'getVar',
                                                 'getUri',
                                                 'setVar'));
-        $this->requestMock->expects($this->any())
-                          ->method('getUri')
-                          ->will($this->returnValue($this->requestUri));
         
         $this->object = new Vmvc_Router($this->requestMock);
     }
 
     public function testAddRoute()
     {
+        $this->requestMock->expects($this->any())
+                          ->method('getUri')
+                          ->will($this->returnValue($this->requestUri));
+
         $routeMock = $this->getMock('Vmvc_Route');
 
         $this->object->addRoute($routeMock);
@@ -92,6 +93,27 @@ class Vmvc_RouterTest extends VmvcTestCase
     public function testRoute()
     {
         $this->markTestIncomplete();
+    }
+
+    public function testGetRoute()
+    {
+        $this->requestMock->expects($this->any())
+                          ->method('getUri')
+                          ->will($this->returnValue(null));
+
+        $options = array(
+            'lang' => 'en',
+            'controller' => 'index',
+            'action' => 'index',
+        );
+        $defaultRoute = new Vmvc_Route('/^[a-z]{2}$:lang/:controller/:action/',
+                                       $options);
+        $this->object->addRoute($defaultRoute);
+        $this->object->setDefaultRoute($defaultRoute, '/en/index/index/');
+        
+        $route = $this->object->getRoute();
+
+        $this->assertSame($defaultRoute, $route);
     }
 }
 ?>

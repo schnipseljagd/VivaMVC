@@ -62,11 +62,16 @@ class Vmvc_RouteTest extends VmvcTestCase
      */
     protected function setUp()
     {
-
+        $options = array(
+            'controller' => 'indexC',
+            'action' => 'indexA',
+        );
+        $this->object = new Vmvc_Route('/:controller/:action', $options);
     }
 
-    public function testRoute()
+    public function testMatchesWithQuestionMarkSeperator()
     {
-        $this->markTestIncomplete();
+        $result = $this->object->matches('/indexC/indexA?test=testvalue');
+        $this->assertTrue($result);
     }
 }

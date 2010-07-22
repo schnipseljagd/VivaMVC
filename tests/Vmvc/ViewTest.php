@@ -141,9 +141,6 @@ class Vmvc_ViewTest extends VmvcTestCase
         $this->assertEquals($return, 'test');
     }
 
-    /**
-     * @expectedException RuntimeException
-     */
     public function testRenderHttpResponseIsNotSet()
     {
         $this->responseMock->expects($this->any())
@@ -151,6 +148,7 @@ class Vmvc_ViewTest extends VmvcTestCase
                            ->will($this->returnValue(array()));
 
         $return = $this->object->render($this->viewScriptPath);
+        $this->assertEquals($return, 'test');
     }
     
     public function testRenderWithHeaders()
