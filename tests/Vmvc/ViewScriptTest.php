@@ -42,10 +42,6 @@
  */
 
 require_once 'tests/VmvcTestCase.php';
-require_once 'Vmvc/Exception.php';
-require_once 'Vmvc/ViewHelperInterface.php';
-require_once 'Vmvc/ViewScript.php';
-
 require_once 'tests/_files/TestHelper.php';
 
 /**
@@ -100,21 +96,22 @@ class Vmvc_ViewScriptTest extends VmvcTestCase
 
     public function testRegisterHelper()
     {
-        $helperMock = $this->getMock('Vmvc_ViewHelperInterface', array(),
-                                     array(), 'TestRHelper');
+        $helperMock = $this->getMock(
+            'Vmvc_ViewHelperInterface', array(), array(), 'TestRHelper'
+        );
 
         $this->object->registerHelper($helperMock);
 
         $viewHelpers = $this->readAttribute($this->object, 'viewHelpers');
 
-        $this->assertType('TestRHelper', $viewHelpers['TestRHelper']);
+        $this->assertInstanceOf('TestRHelper', $viewHelpers['TestRHelper']);
     }
 
     public function testGetHelper()
     {
-        $helperMock = $this->getMock('Vmvc_ViewHelperInterface',
-                                     array('execute'),
-                                     array(), 'TestStringHelper');
+        $helperMock = $this->getMock(
+            'Vmvc_ViewHelperInterface', array(), array(), 'TestStringHelper'
+        );
         $helperMock->expects($this->any())
                    ->method('execute')
                    ->will($this->returnValue('returnTest'));
@@ -138,9 +135,9 @@ class Vmvc_ViewScriptTest extends VmvcTestCase
 
     public function testMagicMethodCall()
     {
-        $helperMock = $this->getMock('Vmvc_ViewHelperInterface',
-                                     array('execute'),
-                                     array(), 'TestString2Helper');
+        $helperMock = $this->getMock(
+            'Vmvc_ViewHelperInterface', array(), array(), 'TestString2Helper'
+        );
         $helperMock->expects($this->any())
                    ->method('execute')
                    ->will($this->returnValue('returnTest'));

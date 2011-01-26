@@ -42,9 +42,6 @@
  */
 
 require_once 'tests/VmvcTestCase.php';
-require_once 'Vmvc/ApplicationController.php';
-require_once 'Vmvc/ControllerCallObserverInterface.php';
-require_once 'Vmvc/FrontController.php';
 
 /**
  * FrontControllerTest
@@ -59,31 +56,25 @@ require_once 'Vmvc/FrontController.php';
  */
 class FrontControllerTestNew extends VmvcTestCase
 {
-    /**
-     * Sets up the fixture, for example, opens a network connection.
-     * This method is called before a test is executed.
-     */
-    protected function setUp()
-    {
-
-    }
-
     public function testExecute()
     {
-        
-        $appControllerMock = $this->getMock('Vmvc_ApplicationController');
+        $appControllerMock = $this->getMockWithoutDependencies(
+            'Vmvc_ApplicationController'
+        );
         $appControllerMock->expects($this->any())
                           ->method('getController')
                           ->will($this->returnValue('test'));
         
-        $controllerMock = $this->getMock('Vmvc_Controller');
+        $controllerMock = $this->getMockWithoutDependencies('Vmvc_Controller');
 
-        $controllerFactoryMock = $this->getMock('Vmvc_ControllerFactory');
+        $controllerFactoryMock = $this->getMockWithoutDependencies(
+            'Vmvc_ControllerFactory'
+        );
         $controllerFactoryMock->expects($this->any())
                               ->method('getController')
                               ->will($this->returnValue($controllerMock));
         
-        $viewMock = $this->getMock('Vmvc_View');
+        $viewMock = $this->getMockWithoutDependencies('Vmvc_View');
 
 
         $frontController = new Vmvc_FrontController($appControllerMock);

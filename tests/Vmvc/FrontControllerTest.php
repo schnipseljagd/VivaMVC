@@ -42,8 +42,6 @@
  */
 
 require_once 'tests/VmvcTestCase.php';
-require_once 'Vmvc/ControllerCallObserverInterface.php';
-require_once 'Vmvc/FrontController.php';
 
 /**
  * Test class for Vmvc_FrontController.
@@ -65,28 +63,30 @@ class Vmvc_FrontControllerTest extends VmvcTestCase
      */
     protected function setUp()
     {
-        $this->appControllerMock = $this->getMock('Vmvc_ApplicationController',
-                                            array('getViewScript',
-                                                  'getController',
-                                                  'getAction'));
+        $this->appControllerMock = $this->getMockWithoutDependencies(
+            'Vmvc_ApplicationController'
+        );
 
         $this->object = new Vmvc_FrontController($this->appControllerMock);
     }
 
     public function testExecuteWithSuccess()
     {
-        $this->setAppControllerMockMethods();
+        $this->loadAppControllerStubs();
 
         // build actioncontroller mock
-        $controllerMock = $this->getMock('Vmvc_Controller',
-                                         array('execute'));
+        $controllerMock = $this->getMockWithoutDependencies(
+            'Vmvc_Controller'
+        );
 
         $controllerMock->expects($this->any())
                        ->method('execute')
                        ->will($this->returnValue(true));
 
         // build controller factory mock
-        $controllerFactoryMock = $this->getControllerFactoryMock($controllerMock);
+        $controllerFactoryMock = $this->getControllerFactoryMock(
+            $controllerMock
+        );
 
         // build view mock
         $viewMock = $this->getSuccessViewMock();
@@ -108,15 +108,16 @@ class Vmvc_FrontControllerTest extends VmvcTestCase
                                 ->will($this->returnValue('error.php'));
 
         // build controller mock
-        $controllerMock = $this->getMock('Vmvc_Controller',
-                                         array('execute'));
+        $controllerMock = $this->getMockWithoutDependencies('Vmvc_Controller');
 
         $controllerMock->expects($this->any())
                        ->method('execute')
                        ->will($this->returnValue(false));
 
         // build controller factory mock
-        $controllerFactoryMock = $this->getControllerFactoryMock($controllerMock);
+        $controllerFactoryMock = $this->getControllerFactoryMock(
+            $controllerMock
+        );
 
         // build view mock
         $viewMock = $this->getErrorViewMock();
@@ -127,13 +128,15 @@ class Vmvc_FrontControllerTest extends VmvcTestCase
 
     public function testExecuteWithActionSuccess()
     {
-        $this->setAppControllerMockMethods();
+        $this->loadAppControllerStubs();
 
         // build controller mock
         $controllerMock = $this->getActionControllerMock();
 
         // build controller factory mock
-        $controllerFactoryMock = $this->getControllerFactoryMock($controllerMock);
+        $controllerFactoryMock = $this->getControllerFactoryMock(
+            $controllerMock
+        );
 
         // build view mock
         $viewMock = $this->getSuccessViewMock();
@@ -160,8 +163,9 @@ class Vmvc_FrontControllerTest extends VmvcTestCase
         $controllerMock = $this->getActionControllerMock();
 
         // build controller factory mock
-        $controllerFactoryMock = $this->getMock('Vmvc_ControllerFactory',
-                                                array('getController'));
+        $controllerFactoryMock = $this->getMockWithoutDependencies(
+            'Vmvc_ControllerFactory'
+        );
 
         $controllerFactoryMock->expects($this->any())
                               ->method('getController')
@@ -169,7 +173,7 @@ class Vmvc_FrontControllerTest extends VmvcTestCase
                               ->will($this->returnValue($controllerMock));
 
         // build view mock
-        $viewMock = $this->getMock('Vmvc_View', array('render'));
+        $viewMock = $this->getMockWithoutDependencies('Vmvc_View');
 
         // test
         $this->object->execute($controllerFactoryMock, $viewMock);
@@ -177,11 +181,9 @@ class Vmvc_FrontControllerTest extends VmvcTestCase
 
     protected function getActionControllerMock()
     {
-        $controllerMock = $this->getMock('Vmvc_ActionController',
-                                         array('execute',
-                                               'beforeExecute',
-                                               'afterExecute',
-                                               'indexAction'));
+        $controllerMock = $this->getMockWithoutDependencies(
+            'Vmvc_ActionController'
+        );
         $controllerMock->expects($this->any())
                        ->method('execute')
                        ->will($this->returnValue(true));
@@ -191,8 +193,9 @@ class Vmvc_FrontControllerTest extends VmvcTestCase
 
     protected function getControllerFactoryMock($controllerMock)
     {
-        $controllerFactoryMock = $this->getMock('Vmvc_ControllerFactory',
-                                                array('getController'));
+        $controllerFactoryMock = $this->getMockWithoutDependencies(
+            'Vmvc_ControllerFactory'
+        );
 
         $controllerFactoryMock->expects($this->any())
                               ->method('getController')
@@ -203,7 +206,7 @@ class Vmvc_FrontControllerTest extends VmvcTestCase
 
     protected function getSuccessViewMock()
     {
-        $viewMock = $this->getMock('Vmvc_View', array('render'));
+        $viewMock = $this->getMockWithoutDependencies('Vmvc_View');
         $viewMock->expects($this->any())
                  ->method('render')
                  ->with($this->equalTo('index/index.php'))
@@ -214,7 +217,7 @@ class Vmvc_FrontControllerTest extends VmvcTestCase
 
     protected function getErrorViewMock()
     {
-        $viewMock = $this->getMock('Vmvc_View', array('render'));
+        $viewMock = $this->getMockWithoutDependencies('Vmvc_View');
         $viewMock->expects($this->any())
                  ->method('render')
                  ->with($this->equalTo('error.php'))
@@ -222,7 +225,7 @@ class Vmvc_FrontControllerTest extends VmvcTestCase
         return $viewMock;
     }
 
-    protected function setAppControllerMockMethods()
+    protected function loadAppControllerStubs()
     {
         $this->appControllerMock->expects($this->any())
                                 ->method('getController')

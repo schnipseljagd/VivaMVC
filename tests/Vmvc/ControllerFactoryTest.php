@@ -42,10 +42,6 @@
  */
 
 require_once 'tests/VmvcTestCase.php';
-require_once 'Vmvc/ServiceProviderInterface.php';
-require_once 'Vmvc/Exception.php';
-require_once 'Vmvc/Controller.php';
-require_once 'Vmvc/ControllerFactory.php';
 
 require_once 'tests/_files/TestController.php';
 
@@ -71,22 +67,23 @@ class Vmvc_ControllerFactoryTest extends VmvcTestCase
      */
     protected function setUp()
     {
-        $this->requestMock = $this->getMock('Vmvc_Request');
-        $this->responseMock = $this->getMock('Vmvc_Response');
-        $this->object = new Vmvc_ControllerFactory($this->requestMock,
-                                                   $this->responseMock);
+        $this->requestMock = $this->getMockWithoutDependencies('Vmvc_Request');
+        $this->responseMock = $this->getMockWithoutDependencies(
+            'Vmvc_Response'
+        );
+        $this->object = new Vmvc_ControllerFactory(
+            $this->requestMock, $this->responseMock
+        );
 
-        $this->serviceProviderMock = $this->getMock('Vmvc_ServiceProviderInterface',
-                                                     array('getServiceObject',
-                                                           'getRequestService',
-                                                           'getResponseService',
-                                                           'getArrayObjectService'));
+        $this->serviceProviderMock = $this->getMock(
+            'Vmvc_ServiceProviderInterface'
+        );
     }
 
     public function testGetController()
     {
         $controller = $this->object->getController();
-        $this->assertTrue($controller instanceof Vmvc_Controller);
+        $this->assertInstanceOf('Vmvc_Controller', $controller);
     }
 
     /**
@@ -101,26 +98,34 @@ class Vmvc_ControllerFactoryTest extends VmvcTestCase
     {
         $serviceProviderMock = $this->serviceProviderMock;
         $serviceProviderMock->expects($this->at(0))
-                             ->method('getServiceObject')
-                             ->with($this->equalTo('request'))
-                             ->will($this->returnValue(
-                                            $this->getMock('Vmvc_Request')));
+                            ->method('getServiceObject')
+                            ->with($this->equalTo('request'))
+                            ->will(
+                                $this->returnValue(
+                                    $this->getMockWithoutDependencies(
+                                        'Vmvc_Request'
+                                    )
+                                )
+                            );
 
         $serviceProviderMock->expects($this->at(1))
-                             ->method('getServiceObject')
-                             ->with($this->equalTo('response'))
-                             ->will($this->returnValue(
-                                            $this->getMock('Vmvc_Response')));
+                            ->method('getServiceObject')
+                            ->with($this->equalTo('response'))
+                            ->will(
+                                $this->returnValue(
+                                    $this->getMock('Vmvc_Response')
+                                )
+                            );
 
         $serviceProviderMock->expects($this->at(2))
-                             ->method('getServiceObject')
-                             ->with($this->equalTo('arrayObject'))
-                             ->will($this->returnValue(new ArrayObject()));
+                            ->method('getServiceObject')
+                            ->with($this->equalTo('arrayObject'))
+                            ->will($this->returnValue(new ArrayObject()));
 
         $this->object->setServiceProvider($serviceProviderMock);
         
         $controller = $this->object->getController('test');
-        $this->assertTrue($controller instanceof Vmvc_Controller);
+        $this->assertInstanceOf('Vmvc_Controller', $controller);
     }
 
     /**
@@ -158,7 +163,7 @@ class Vmvc_ControllerFactoryTest extends VmvcTestCase
     public function testGetInstance()
     {
         $controller = $this->object->getInstance('Vmvc_Controller');
-        $this->assertType('Vmvc_Controller', $controller);
+        $this->assertInstanceOf('Vmvc_Controller', $controller);
     }
 
     public function testGetInstanceWithHelperBroker()
@@ -170,9 +175,13 @@ class Vmvc_ControllerFactoryTest extends VmvcTestCase
 
     public function testGetInstanceWithArgs()
     {
-        $args = array($this->requestMock, $this->responseMock, new ArrayObject());
+        $args = array(
+            $this->requestMock,
+            $this->responseMock,
+            new ArrayObject()
+        );
         $controller = $this->object->getInstance('TestController', $args);
-        $this->assertType('TestController', $controller);
+        $this->assertInstanceOf('TestController', $controller);
     }
 }
 ?>

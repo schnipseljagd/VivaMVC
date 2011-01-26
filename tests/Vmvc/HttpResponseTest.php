@@ -42,7 +42,6 @@
  */
 
 require_once 'tests/VmvcTestCase.php';
-require_once 'Vmvc/HttpResponse.php';
 
 /**
  * HttpResponseTest
@@ -81,9 +80,8 @@ class Vmvc_HttpResponseTest extends VmvcTestCase
 
     public function testRedirectTo()
     {
-        $httpResponseMock = $this->getMock('Vmvc_HttpResponse',
-                                           array('setHeader'),
-                                           array(), '', true, true, false);
+        $httpResponseMock = $this->getMock(
+            'Vmvc_HttpResponse', array('setHeader'), array(), '');
         $httpResponseMock->expects($this->once())
                          ->method('setHeader')
                          ->with($this->equalTo('Location: testLocation'),

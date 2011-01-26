@@ -42,7 +42,6 @@
  */
 
 require_once 'tests/VmvcTestCase.php';
-require_once 'Vmvc/HelperBroker.php';
 
 /**
  * Test class for HelperBrokerTest.

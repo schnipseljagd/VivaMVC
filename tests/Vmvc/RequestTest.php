@@ -42,7 +42,6 @@
  */
 
 require_once 'tests/VmvcTestCase.php';
-require_once 'Vmvc/Request.php';
 
 /**
  * Test class for Vmvc_Request.

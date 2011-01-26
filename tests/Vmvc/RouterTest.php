@@ -42,8 +42,6 @@
  */
 
 require_once 'tests/VmvcTestCase.php';
-require_once 'Vmvc/Exception.php';
-require_once 'Vmvc/Router.php';
 
 /**
  * Test class for Vmvc_Router.
@@ -71,10 +69,7 @@ class Vmvc_RouterTest extends VmvcTestCase
      */
     protected function setUp()
     {
-        $this->requestMock = $this->getMock('Vmvc_Request', array(
-                                                'getVar',
-                                                'getUri',
-                                                'setVar'));
+        $this->requestMock = $this->getMockWithoutDependencies('Vmvc_Request');
         
         $this->object = new Vmvc_Router($this->requestMock);
     }
@@ -85,14 +80,9 @@ class Vmvc_RouterTest extends VmvcTestCase
                           ->method('getUri')
                           ->will($this->returnValue($this->requestUri));
 
-        $routeMock = $this->getMock('Vmvc_Route');
+        $routeMock = $this->getMockWithoutDependencies('Vmvc_Route');
 
         $this->object->addRoute($routeMock);
-    }
-
-    public function testRoute()
-    {
-        $this->markTestIncomplete();
     }
 
     public function testGetRoute()
@@ -106,8 +96,9 @@ class Vmvc_RouterTest extends VmvcTestCase
             'controller' => 'index',
             'action' => 'index',
         );
-        $defaultRoute = new Vmvc_Route('/^[a-z]{2}$:lang/:controller/:action/',
-                                       $options);
+        $defaultRoute = new Vmvc_Route(
+            '/^[a-z]{2}$:lang/:controller/:action/', $options
+        );
         $this->object->addRoute($defaultRoute);
         $this->object->setDefaultRoute($defaultRoute, '/en/index/index/');
         

@@ -42,11 +42,6 @@
  */
 
 require_once 'tests/VmvcTestCase.php';
-require_once 'Vmvc/Response.php';
-require_once 'Vmvc/HttpResponse.php';
-require_once 'Vmvc/ViewScript.php';
-require_once 'Vmvc/View.php';
-require_once 'Vmvc/LayoutView.php';
 
 /**
  * Test class for Vmvc_Controller.
@@ -71,11 +66,9 @@ class Vmvc_LayoutViewTest extends VmvcTestCase
      */
     protected function setUp()
     {
-        $this->responseMock = $this->getMock('Vmvc_Response',
-                                             array('setData',
-                                                   'getData',
-                                                   'getHeaders',
-                                                   'getContentSubType'));
+        $this->responseMock = $this->getMockWithoutDependencies(
+            'Vmvc_Response'
+        );
         
         $this->object = new Vmvc_LayoutView($this->responseMock);
     }
@@ -84,9 +77,10 @@ class Vmvc_LayoutViewTest extends VmvcTestCase
     {
         $this->object->setLayoutScript($this->layoutPath);
         
-        $this->assertEquals($this->layoutPath,
-                            $this->readAttribute($this->object,
-                                                 'layoutScriptPath'));
+        $this->assertEquals(
+            $this->layoutPath,
+            $this->readAttribute($this->object, 'layoutScriptPath')
+        );
     }
 
     /**
@@ -149,7 +143,7 @@ class Vmvc_LayoutViewTest extends VmvcTestCase
 
     protected function getHttpResponseMock()
     {
-        return $this->getMock('Vmvc_HttpResponse', array());
+        return $this->getMockWithoutDependencies('Vmvc_HttpResponse');
     }
 }
 ?>

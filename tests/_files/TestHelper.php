@@ -52,12 +52,7 @@
  */
 class TestHelper
 {
-    public function __construct()
-    {
-
-    }
-
-	public function execute(array $args = array())
+    public function execute(array $args = array())
     {
         return 'returnTest';
     }

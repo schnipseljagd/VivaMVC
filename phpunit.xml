@@ -4,7 +4,8 @@
          backupGlobals="false"
          backupStaticAttributes="false"
          syntaxCheck="false"
-         processIsolation="false">
+         processIsolation="false"
+         bootstrap="tests/bootstrap.php">
     <testsuite name="VivaMVC">
         <directory suffix="Test.php">tests</directory>
     </testsuite>

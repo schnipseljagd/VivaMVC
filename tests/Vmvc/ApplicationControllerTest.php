@@ -42,7 +42,6 @@
  */
 
 require_once 'tests/VmvcTestCase.php';
-require_once 'Vmvc/ApplicationController.php';
 
 /**
  * Test class for Vmvc_ApplicationController.
@@ -62,7 +61,7 @@ class Vmvc_ApplicationControllerTest extends VmvcTestCase
      */
     protected function setUp()
     {
-        $routerMock = $this->getMock('Vmvc_Router', array('getRouteVar'));
+        $routerMock = $this->getMockWithoutDependencies('Vmvc_Router');
         $routerMock->expects($this->any())
                    ->method('getRouteVar')
                    ->will($this->returnValue('index'));
@@ -78,7 +77,7 @@ class Vmvc_ApplicationControllerTest extends VmvcTestCase
 
     public function testGetControllerReturnsAnEmptyString()
     {
-        $routerMock = $this->getMock('Vmvc_Router', array('getRouteVar'));
+        $routerMock = $this->getMockWithoutDependencies('Vmvc_Router');
         $routerMock->expects($this->any())
                    ->method('getRouteVar')
                    ->will($this->returnValue(null));

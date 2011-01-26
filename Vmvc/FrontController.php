@@ -79,7 +79,7 @@ class Vmvc_FrontController implements Vmvc_ControllerCallObserverInterface
     /**
      * @param Vmvc_ApplicationController $app
      */
-	public function __construct(Vmvc_ApplicationController $app)
+    public function __construct(Vmvc_ApplicationController $app)
     {
         $this->app = $app;
     }

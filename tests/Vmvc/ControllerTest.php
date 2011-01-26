@@ -42,8 +42,6 @@
  */
 
 require_once 'tests/VmvcTestCase.php';
-require_once 'Vmvc/Exception.php';
-require_once 'Vmvc/Controller.php';
 
 /**
  * Test class for Vmvc_Controller.
@@ -66,13 +64,13 @@ class Vmvc_ControllerTest extends VmvcTestCase
      */
     protected function setUp()
     {
-        $this->requestMock  = $this->getMock('Vmvc_Request', 
-                                             array('getVar', 'getPostVar'));
-        $this->responseMock = $this->getMock('Vmvc_Response',
-                                             array('getData', 'setData',
-                                                   'addHeader', 'clearHeaders'));
-        $this->object = new Vmvc_Controller($this->requestMock,
-                                            $this->responseMock);
+        $this->requestMock = $this->getMockWithoutDependencies('Vmvc_Request');
+        $this->responseMock = $this->getMockWithoutDependencies(
+            'Vmvc_Response'
+        );
+        $this->object = new Vmvc_Controller(
+            $this->requestMock, $this->responseMock
+        );
     }
 
     public function testGetParam()
@@ -133,15 +131,17 @@ class Vmvc_ControllerTest extends VmvcTestCase
         $helperBrokerMock = $this->getMock('Vmvc_HelperBroker');
         $this->object->setHelperBroker($helperBrokerMock);
 
-        $helperBrokerAttr = $this->readAttribute($this->object,
-                                                  'helperBroker');
+        $helperBrokerAttr = $this->readAttribute(
+            $this->object, 'helperBroker'
+        );
         $this->assertSame($helperBrokerMock, $helperBrokerAttr);
     }
 
     public function testCallHelper()
     {
-        $helperBrokerMock = $this->getMock('Vmvc_HelperBroker',
-                                            array('callAlias'));
+        $helperBrokerMock = $this->getMock(
+            'Vmvc_HelperBroker', array('callAlias')
+        );
         $helperBrokerMock->expects($this->once())
                           ->method('callAlias')
                           ->with($this->equalTo('test'),

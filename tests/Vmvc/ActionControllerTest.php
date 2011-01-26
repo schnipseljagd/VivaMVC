@@ -42,9 +42,6 @@
  */
 
 require_once 'tests/VmvcTestCase.php';
-require_once 'Vmvc/Exception.php';
-require_once 'Vmvc/Controller.php';
-require_once 'Vmvc/ActionController.php';
 
 /**
  * Test class for Vmvc_ApplicationController.
@@ -67,10 +64,13 @@ class Vmvc_ActionControllerTest extends VmvcTestCase
      */
     protected function setUp()
     {
-        $this->requestMock  = $this->getMock('Vmvc_Request');
-        $this->responseMock = $this->getMock('Vmvc_Response');
-        $this->object = new Vmvc_ActionController($this->requestMock,
-                                                  $this->responseMock);
+        $this->requestMock = $this->getMockWithoutDependencies('Vmvc_Request');
+        $this->responseMock = $this->getMockWithoutDependencies(
+            'Vmvc_Response'
+        );
+        $this->object = new Vmvc_ActionController(
+            $this->requestMock, $this->responseMock
+        );
     }
 
     /**

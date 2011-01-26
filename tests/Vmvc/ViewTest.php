@@ -42,10 +42,6 @@
  */
 
 require_once 'tests/VmvcTestCase.php';
-require_once 'Vmvc/Response.php';
-require_once 'Vmvc/HttpResponse.php';
-require_once 'Vmvc/ViewScript.php';
-require_once 'Vmvc/View.php';
 
 /**
  * Test class for Vmvc_View.
@@ -75,11 +71,9 @@ class Vmvc_ViewTest extends VmvcTestCase
      */
     protected function setUp()
     {
-        $this->responseMock = $this->getMock('Vmvc_Response',
-                                       array('setData', 
-                                             'getData',
-                                             'getHeaders',
-                                             'getContentSubType'));
+        $this->responseMock = $this->getMockWithoutDependencies(
+            'Vmvc_Response'
+        );
         
         $this->object = new Vmvc_View($this->responseMock);
     }
@@ -185,7 +179,7 @@ class Vmvc_ViewTest extends VmvcTestCase
 
     protected function getHttpResponseMock()
     {
-        return $this->getMock('Vmvc_HttpResponse', array('setHeader'));
+        return $this->getMockWithoutDependencies('Vmvc_HttpResponse');
     }
 }
 ?>

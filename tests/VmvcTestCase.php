@@ -54,22 +54,24 @@
  */
 class VmvcTestCase extends PHPUnit_Framework_TestCase
 {
-	/**
-     * Returns a mock object for the specified class.
+    /**
+     * Returns a mock object without constructor or clone method call
+     * for the specified class.
      *
      * @param  string  $originalClassName
      * @param  array   $methods
      * @param  array   $arguments
      * @param  string  $mockClassName
-     * @param  boolean $callOriginalConstructor
-     * @param  boolean $callOriginalClone
-     * @param  boolean $callAutoload
      * @return object
      * @throws InvalidArgumentException
-     * @since  Method available since Release 3.0.0
      */
-    protected function getMock($originalClassName, $methods = array(), array $arguments = array(), $mockClassName = '', $callOriginalConstructor = FALSE, $callOriginalClone = FALSE, $callAutoload = FALSE)
-    {
-        return parent::getMock($originalClassName, $methods, $arguments, $mockClassName, $callOriginalConstructor, $callOriginalClone, $callAutoload);
+    public function getMockWithoutDependencies(
+        $originalClassName, $methods = array(), array $arguments = array(),
+        $mockClassName = ''
+    ) {
+        return $this->getMock(
+            $originalClassName, $methods, $arguments, $mockClassName, false,
+            false
+        );
     }
 }
