@@ -70,14 +70,6 @@ class Vmvc_HttpResponseTest extends VmvcTestCase
         $this->object = new Vmvc_HttpResponse();
     }
 
-    /**
-     * @expectedException PHPUnit_Framework_Error
-     */
-    public function testSetHeader()
-    {
-        $this->object->setHeader('testHeader');
-    }
-
     public function testRedirectTo()
     {
         $httpResponseMock = $this->getMock(

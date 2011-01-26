@@ -80,6 +80,6 @@ class Vmvc_HelperBrokerTest extends VmvcTestCase
     {
         $helper = $object->getHelper('tEst');
 
-        $this->assertType('ArrayObject', $helper);
+        $this->assertInstanceOf('ArrayObject', $helper);
     }
 }

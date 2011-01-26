@@ -110,7 +110,7 @@ class Vmvc_RequestTest extends VmvcTestCase
 
     public function testGetVars()
     {
-        $this->assertType('array', $this->object->getVars());
+        $this->assertInternalType('array', $this->object->getVars());
     }
 
     public function testGetPostVar()
@@ -133,7 +133,7 @@ class Vmvc_RequestTest extends VmvcTestCase
 
     public function testGetPostVars()
     {
-        $this->assertType('array', $this->object->getPostVars());
+        $this->assertInternalType('array', $this->object->getPostVars());
     }
 
     public function testIsXmlHttpRequest()
