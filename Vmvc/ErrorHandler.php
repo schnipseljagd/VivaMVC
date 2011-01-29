@@ -34,24 +34,27 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @package    Vmvc
- * @author     Joscha Meyer <schnipseljagd@googlemail.com>
- * @copyright  2010 Joscha Meyer <schnipseljagd@googlemail.com>
- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @since
+ * @category  MVC
+ * @package   Vmvc
+ * @author    Joscha Meyer <schnipseljagd@googlemail.com>
+ * @copyright 2010 Joscha Meyer <schnipseljagd@googlemail.com>
+ * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
+ * @link      http://vivamvc.schnipseljagd.org/
+ * @since     0.1
  */
 
 
 /**
  * ErrorHandler
  *
- * @package    Vmvc
- * @author     Joscha Meyer <schnipseljagd@googlemail.com>
- * @copyright  2010 Joscha Meyer <schnipseljagd@googlemail.com>
- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version
- * @link
- * @since      Release 0.1
+ * @category  MVC
+ * @package   Vmvc
+ * @author    Joscha Meyer <schnipseljagd@googlemail.com>
+ * @copyright 2010 Joscha Meyer <schnipseljagd@googlemail.com>
+ * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
+ * @version   Release: 0.3.1
+ * @link      http://vivamvc.schnipseljagd.org/
+ * @since     0.1
  */
 class Vmvc_ErrorHandler
 {
@@ -75,7 +78,7 @@ class Vmvc_ErrorHandler
     /**
      * @param Vmvc_Response $response
      */
-	public function __construct(Vmvc_Response $response)
+    public function __construct(Vmvc_Response $response)
     {
         $this->response = $response;
     }
@@ -107,7 +110,8 @@ class Vmvc_ErrorHandler
     /**
      * @param string $name
      * @param string $message
-     * @param string|null $header
+     * @param string $header
+     * @return void
      */
     public function setError($name, $message, $header = null)
     {
@@ -115,17 +119,18 @@ class Vmvc_ErrorHandler
         $this->errorMessage = $message;
         $this->isError = true;
         
-        if($header!==null && is_string($header)) {
+        if ($header !== null && is_string($header)) {
             $this->setResponseHeader($header);
         }
     }
 
     /**
-     * @param string|null $message
+     * @param string $message
+     * @return void
      */
     public function set404Error($message = null)
     {
-        if($message===null) {
+        if ($message === null) {
             $message = 'Page Was Not Found';
         }
         $this->setError('404', $message);
@@ -133,6 +138,11 @@ class Vmvc_ErrorHandler
         $this->setResponseHeader("HTTP/1.1 404 {$message}");
     }
 
+    /**
+     * @param string $header
+     * @throws Exception
+     * @return void
+     */
     protected function setResponseHeader($header)
     {
         $this->response->clearHeaders();
