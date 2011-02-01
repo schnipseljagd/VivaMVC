@@ -111,7 +111,6 @@ class Vmvc_ErrorHandler
      * @param string $name
      * @param string $message
      * @param string $header
-     * @return void
      */
     public function setError($name, $message, $header = null)
     {
@@ -126,7 +125,6 @@ class Vmvc_ErrorHandler
 
     /**
      * @param string $message
-     * @return void
      */
     public function set404Error($message = null)
     {
@@ -141,7 +139,6 @@ class Vmvc_ErrorHandler
     /**
      * @param string $header
      * @throws Exception
-     * @return void
      */
     protected function setResponseHeader($header)
     {

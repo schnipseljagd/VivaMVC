@@ -34,29 +34,33 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @package    Vmvc
- * @author     Joscha Meyer <schnipseljagd@googlemail.com>
- * @copyright  2010 Joscha Meyer <schnipseljagd@googlemail.com>
- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @since
+ * @package   Vmvc
+ * @author    Joscha Meyer <schnipseljagd@googlemail.com>
+ * @copyright 2010 Joscha Meyer <schnipseljagd@googlemail.com>
+ * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
+ * @link      http://vivamvc.schnipseljagd.org/
+ * @since     0.1
  */
 
 
 /**
  * ViewHelperInterface
  *
- * @package    Vmvc
- * @author     Joscha Meyer <schnipseljagd@googlemail.com>
- * @copyright  2010 Joscha Meyer <schnipseljagd@googlemail.com>
- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version
- * @link
- * @since      Release 0.1
+ * @category  MVC
+ * @package   Vmvc
+ * @author    Joscha Meyer <schnipseljagd@googlemail.com>
+ * @copyright 2010 Joscha Meyer <schnipseljagd@googlemail.com>
+ * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
+ * @version   Release: 0.3.2
+ * @link      http://vivamvc.schnipseljagd.org/
+ * @since     Release: 0.1
  */
 interface Vmvc_ViewHelperInterface
 {
     /**
+     * @param array  $args
+     * @param string $viewDirectory
      * @return mixed
      */
-	public function execute(array $args = array());
+    public function execute(array $args = array(), $viewDirectory = '');
 }

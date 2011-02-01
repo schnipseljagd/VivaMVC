@@ -34,24 +34,26 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @package    Vmvc
- * @author     Joscha Meyer <schnipseljagd@googlemail.com>
- * @copyright  2010 Joscha Meyer <schnipseljagd@googlemail.com>
- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @since
+ * @package   Vmvc
+ * @author    Joscha Meyer <schnipseljagd@googlemail.com>
+ * @copyright 2010 Joscha Meyer <schnipseljagd@googlemail.com>
+ * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
+ * @link      http://vivamvc.schnipseljagd.org/
+ * @since     0.1
  */
 
 
 /**
  * ViewScript
  *
- * @package    Vmvc
- * @author     Joscha Meyer <schnipseljagd@googlemail.com>
- * @copyright  2010 Joscha Meyer <schnipseljagd@googlemail.com>
- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version
- * @link
- * @since      Release 0.1
+ * @category  MVC
+ * @package   Vmvc
+ * @author    Joscha Meyer <schnipseljagd@googlemail.com>
+ * @copyright 2010 Joscha Meyer <schnipseljagd@googlemail.com>
+ * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
+ * @version   Release: 0.3.2
+ * @link      http://vivamvc.schnipseljagd.org/
+ * @since     Release: 0.1
  */
 class Vmvc_ViewScript
 {
@@ -81,10 +83,15 @@ class Vmvc_ViewScript
      */
     public function setPath($path)
     {
-        if(!is_string($path)) {
-            throw new InvalidArgumentException('path has to be a string.');
-        }
-        $this->path = $path . '/';
+        $this->path = rtrim($path, '/') . '/';
+    }
+
+    /**
+     * @return string
+     */
+    public function getPath()
+    {
+        return $this->path;
     }
 
     /**
@@ -98,22 +105,23 @@ class Vmvc_ViewScript
 
     /**
      * Call a ViewHelper
-     * @throws Vmvc_Exception
      * @param string $name
      * @param string|array $arguments
      * @return mixed
+     * @throws Vmvc_Exception
      */
     public function  __call($name,  $arguments)
     {
         return $this->getHelper($name, $arguments);
     }
 
-	/**
+    /**
+     * @param string $name
      * @param mixed $value
      */
     public function setData($name, $value)
     {
-        $this->data[$name] = $value;
+        $this->data[(string) $name] = $value;
     }
 
     /**
@@ -122,7 +130,7 @@ class Vmvc_ViewScript
      */
     public function getData($name)
     {
-        if(!isset($this->data[$name])) {
+        if (!isset($this->data[$name])) {
             return null;
         }
         return $this->data[$name];
@@ -131,43 +139,46 @@ class Vmvc_ViewScript
 
     /**
      * @param Vmvc_ViewHelperInterface $helper
+     * @param string $helperName
      */
-    public function registerHelper(Vmvc_ViewHelperInterface $helper)
-    {
-        $helperReflection = new ReflectionObject($helper);
-        $helperName = $helperReflection->getName();
+    public function registerHelper(
+        Vmvc_ViewHelperInterface $helper, $helperName = ''
+    ) {
+        if ($helperName == '') {
+            $helperReflection = new ReflectionObject($helper);
+            $helperName = $helperReflection->getName();
+        }
         $this->viewHelpers[$helperName] = $helper;
     }
 
     /**
      * Call a ViewHelper
-     * @throws Vmvc_Exception
-     * @param string $name
+     * @param string $helperName
      * @param array $args
      * @return mixed
+     * @throws Vmvc_Exception
      */
-    public function getHelper($name, $args = array())
+    public function getHelper($helperName, $args = array())
     {
-        $helperName = ucfirst($name) . 'Helper';
-
-        if(isset($this->viewHelpers[$helperName])) {
+        if (isset($this->viewHelpers[$helperName])) {
             $helper = $this->viewHelpers[$helperName];
         } else {
+            $helperName = 'View_Helper_' . ucfirst($helperName);
             $helper = new $helperName();
         }
 
-        if($helper instanceof Vmvc_ViewHelperInterface) {
-            return $helper->execute($args);
+        if (!($helper instanceof Vmvc_ViewHelperInterface)) {
+            throw new Vmvc_Exception(
+                'View Helper needs to implement ViewHelperInterface.'
+            );
         }
-
-        throw new Vmvc_Exception('View Helper needs to implement ' .
-                                 'ViewHelperInterface.');
+        return $helper->execute($args, $this->getPath());
     }
 
     /**
-     * @throws InvalidArgumentException
      * @param string $viewScriptPath
      * @return string
+     * @throws InvalidArgumentException
      */
     public function render($viewScriptPath)
     {
@@ -177,17 +188,18 @@ class Vmvc_ViewScript
     }
 
     /**
-     * @throws InvalidArgumentException
      * @param string $scriptPath
+     * @throws InvalidArgumentException
      */
     protected function validateScriptPath($scriptPath)
     {
-        if(!is_string($scriptPath)
-           || preg_match('/^[a-zA-Z0-9\.\/\_]+$/', $scriptPath)==0)
-        {
+        if (!is_string($scriptPath)
+            || preg_match('/^[a-zA-Z0-9\.\/\_]+$/', $scriptPath)==0
+        ) {
             throw new InvalidArgumentException(
-                          'argument has to be a string and can only ' .
-                          'contain letters and digits, ., _ or /');
+                'argument has to be a string and can only ' .
+                'contain letters and digits, ., _ or /'
+            );
         }
     }
 
@@ -197,11 +209,12 @@ class Vmvc_ViewScript
      * @param string $scriptFooter
      * @return string
      */
-    protected function doRender($scriptPath, $scriptHeader = '', $scriptFooter = '')
-    {
+    protected function doRender(
+        $scriptPath, $scriptHeader = '', $scriptFooter = ''
+    ) {
         $script = $scriptHeader;
         ob_start();
-        include $this->path . lcfirst($scriptPath) . '.php';
+        include $this->getPath() . lcfirst($scriptPath) . '.php';
         $script .= ob_get_clean();
         $script .= $scriptFooter;
         return $script;

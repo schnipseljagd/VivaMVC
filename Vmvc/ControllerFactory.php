@@ -34,24 +34,26 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @package    Vmvc
- * @author     Joscha Meyer <schnipseljagd@googlemail.com>
- * @copyright  2010 Joscha Meyer <schnipseljagd@googlemail.com>
- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @since
+ * @package   Vmvc
+ * @author    Joscha Meyer <schnipseljagd@googlemail.com>
+ * @copyright 2010 Joscha Meyer <schnipseljagd@googlemail.com>
+ * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
+ * @link      http://vivamvc.schnipseljagd.org/
+ * @since     0.1
  */
 
 
 /**
  * ControllerFactory
  *
- * @package    Vmvc
- * @author     Joscha Meyer <schnipseljagd@googlemail.com>
- * @copyright  2010 Joscha Meyer <schnipseljagd@googlemail.com>
- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    
- * @link
- * @since      Release 0.1
+ * @category  MVC
+ * @package   Vmvc
+ * @author    Joscha Meyer <schnipseljagd@googlemail.com>
+ * @copyright 2010 Joscha Meyer <schnipseljagd@googlemail.com>
+ * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
+ * @version   Release: 0.3.2
+ * @link      http://vivamvc.schnipseljagd.org/
+ * @since     Release: 0.1
  */
 class Vmvc_ControllerFactory
 {
@@ -76,8 +78,7 @@ class Vmvc_ControllerFactory
      * @param Vmvc_Request $request
      * @param Vmvc_Response $response
      */
-	public function __construct(Vmvc_Request $request, 
-                                Vmvc_Response $response)
+    public function __construct(Vmvc_Request $request, Vmvc_Response $response)
     {
         $this->request = $request;
         $this->response = $response;
@@ -87,8 +88,8 @@ class Vmvc_ControllerFactory
      * @param Vmvc_ServiceProviderInterface $serviceProvider
      */
     public function setServiceProvider(
-                        Vmvc_ServiceProviderInterface $serviceProvider)
-    {
+        Vmvc_ServiceProviderInterface $serviceProvider
+    ) {
         $this->serviceProvider = $serviceProvider;
     }
 
@@ -102,55 +103,57 @@ class Vmvc_ControllerFactory
 
     /**
      * Call a controller
-     * @throws Vmvc_Exception
-     * @param mixed $params
      * @param string $type
      * @return Vmvc_Controller
+     * @throws Vmvc_Exception
      */
     public function getController($type = '')
     {
         $controllerName = $this->getControllerName($type);
         $controllerConstructorReflection = $this->getConstructorReflection(
-                                               $controllerName);
+            $controllerName
+        );
 
         $params = $controllerConstructorReflection->getParameters();
 
         // instantiate controller with params Vmvc_Request and Vmvc_Response
-        if(count($params)==2
-           && $params[0]->getClass()->name=='Vmvc_Request'
-           && $params[1]->getClass()->name=='Vmvc_Response')
-        {
+        if (count($params) == 2
+            && $params[0]->getClass()->name == 'Vmvc_Request'
+            && $params[1]->getClass()->name == 'Vmvc_Response'
+        ) {
             return $this->getInstance($controllerName);
         }
 
         // instantiate controller with more params
-        if($this->serviceProvider!==null) {
+        if ($this->serviceProvider !== null) {
             $args = $this->getServiceObjects($controllerConstructorReflection);
 
             return $this->getInstance($controllerName, $args);
         }
 
         // care no other options
-        throw new Vmvc_Exception('Controller could not instantiated. ' .
-                                 'Perhaps set the ServiceContainer?');
+        throw new Vmvc_Exception(
+            'Controller could not instantiated. ' .
+            'Perhaps set the ServiceContainer?'
+        );
     }
 
     /**
-     * @throws InvalidArgumentException
-     * @param string $type
+     * @param string $controllerName
      * @param array|null $args
      * @return Vmvc_Controller
+     * @throws InvalidArgumentException
      */
     public function getInstance($controllerName, $args = null)
     {
-        if($args===null) {
+        if ($args === null) {
             $args = array($this->request, $this->response);
         }
 
         $controllerReflection = new ReflectionClass($controllerName);
         $controller = $controllerReflection->newInstanceArgs($args);
 
-        if($this->helperBroker!==null) {
+        if ($this->helperBroker !== null) {
             $controller->setHelperBroker($this->helperBroker);
         }
 
@@ -158,20 +161,21 @@ class Vmvc_ControllerFactory
     }
 
     /**
-     * @throws InvalidArgumentException
      * @param string $type
      * @return string
+     * @throws InvalidArgumentException
      */
     public function getControllerName($type = '')
     {
-        if(!is_string($type) || preg_match('/^[a-zA-Z0-9]*$/', $type)==0) {
+        if (!is_string($type) || preg_match('/^[a-zA-Z0-9]*$/', $type) == 0) {
             throw new InvalidArgumentException(
-                      'argument hast to be a string and has to care the ' .
-                      'php classname convention.');
+                'argument hast to be a string and has to care the ' .
+                'php classname convention.'
+            );
         }
 
-        if($type!='') {
-            $controllerName = ucfirst($type) . 'Controller';
+        if ($type != '') {
+            $controllerName = 'Controller_' . ucfirst($type);
         } else {
             $controllerName = 'Vmvc_Controller';
         }
@@ -180,7 +184,6 @@ class Vmvc_ControllerFactory
     }
 
     /**
-     * 
      * @param string $controllerName
      * @return ReflectionMethod
      */
@@ -196,18 +199,20 @@ class Vmvc_ControllerFactory
      * @param ReflectionMethod $constructorReflection
      * @return array
      */
-    protected function getServiceObjects(ReflectionMethod $constructorReflection)
-    {
+    protected function getServiceObjects(
+        ReflectionMethod $constructorReflection
+    ) {
         $paramServiceObjects = array();
         $parameters = $constructorReflection->getParameters();
         
-        foreach($parameters as $parameter) {
+        foreach ($parameters as $parameter) {
             $serviceObject = $this->serviceProvider
-                                  ->getServiceObject($parameter->name);
+                ->getServiceObject($parameter->name);
             
-            if(!is_object($serviceObject)) {
-                throw new RuntimeException('Service has to return an object. ' .
-                                           'id: ' . $parameter->name);
+            if (!is_object($serviceObject)) {
+                throw new RuntimeException(
+                    'Service has to return an object. id: ' . $parameter->name
+                );
             }
             $paramServiceObjects[] = $serviceObject;
         }

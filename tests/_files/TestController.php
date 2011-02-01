@@ -34,33 +34,41 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @package    Vmvc
- * @author     Joscha Meyer <schnipseljagd@googlemail.com>
- * @copyright  2010 Joscha Meyer <schnipseljagd@googlemail.com>
- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @since
+ * @package   Vmvc
+ * @author    Joscha Meyer <schnipseljagd@googlemail.com>
+ * @copyright 2010 Joscha Meyer <schnipseljagd@googlemail.com>
+ * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
+ * @link      http://vivamvc.schnipseljagd.org/
+ * @since     0.1
  */
-
 
 /**
- * Description of TestController
+ * TestController
  *
- * @package
- * @subpackage
- * @author joscha
- * @version $LastChangedRevision$
+ * @category  MVC
+ * @package   Vmvc
+ * @author    Joscha Meyer <schnipseljagd@googlemail.com>
+ * @copyright 2010 Joscha Meyer <schnipseljagd@googlemail.com>
+ * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
+ * @version   Release: 0.3.2
+ * @link      http://vivamvc.schnipseljagd.org/
+ * @since     Release: 0.1
  */
-class TestController extends Vmvc_Controller
+class Controller_Test extends Vmvc_Controller
 {
     /**
      * @var ArrayObject
      */
     protected $arrayObject;
 
-    public function  __construct(Vmvc_Request $request,
-                                 Vmvc_Response $response,
-                                 ArrayObject $arrayObject)
-    {
+    /**
+     * @param Vmvc_Request $request
+     * @param Vmvc_Response $response
+     * @param ArrayObject $arrayObject
+     */
+    public function  __construct(
+        Vmvc_Request $request, Vmvc_Response $response, ArrayObject $arrayObject
+    ) {
         parent::__construct($request, $response);
 
         $this->arrayObject = $arrayObject;

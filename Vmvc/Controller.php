@@ -34,24 +34,25 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @package    Vmvc
- * @author     Joscha Meyer <schnipseljagd@googlemail.com>
- * @copyright  2010 Joscha Meyer <schnipseljagd@googlemail.com>
- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @since
+ * @package   Vmvc
+ * @author    Joscha Meyer <schnipseljagd@googlemail.com>
+ * @copyright 2010 Joscha Meyer <schnipseljagd@googlemail.com>
+ * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
+ * @link      http://vivamvc.schnipseljagd.org/
+ * @since     0.1
  */
-
 
 /**
  * Controller
  *
- * @package    Vmvc
- * @author     Joscha Meyer <schnipseljagd@googlemail.com>
- * @copyright  2010 Joscha Meyer <schnipseljagd@googlemail.com>
- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version
- * @link
- * @since      Release 0.1
+ * @category  MVC
+ * @package   Vmvc
+ * @author    Joscha Meyer <schnipseljagd@googlemail.com>
+ * @copyright 2010 Joscha Meyer <schnipseljagd@googlemail.com>
+ * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
+ * @version   Release: 0.3.2
+ * @link      http://vivamvc.schnipseljagd.org/
+ * @since     Release: 0.1
  */
 class Vmvc_Controller
 {
@@ -70,15 +71,15 @@ class Vmvc_Controller
     /**
      * @var Vmvc_HelperBroker
      */
-    private $helperBroker;
+    private $_helperBroker;
 
     /**
      * The naming of further parameters should be care the naming convention of
      * the services, that will be called automatically.
-     * @param Vmvc_Request $request
+     * @param Vmvc_Request  $request
      * @param Vmvc_Response $response
      */
-	public function __construct(Vmvc_Request $request, Vmvc_Response $response)
+    public function __construct(Vmvc_Request $request, Vmvc_Response $response)
     {
         $this->request = $request;
         $this->response = $response;
@@ -106,7 +107,7 @@ class Vmvc_Controller
 
     /**
      * @param string $name
-     * @param mixed $value
+     * @param mixed  $value
      */
     public function setData($name, $value)
     {
@@ -124,7 +125,7 @@ class Vmvc_Controller
 
     /**
      * @param string $name
-     * @param mixed $value
+     * @param mixed  $value
      */
     public function __set($name,  $value)
     {
@@ -139,9 +140,6 @@ class Vmvc_Controller
         $this->response->addHeader($header);
     }
 
-    /**
-     * 
-     */
     public function clearHeaders()
     {
         $this->response->clearHeaders();
@@ -153,57 +151,60 @@ class Vmvc_Controller
      */
     public function setHelperBroker(Vmvc_HelperBroker $helperBroker)
     {
-        $this->helperBroker = $helperBroker;
+        $this->_helperBroker = $helperBroker;
     }
 
     /**
      * @param string $name
-     * @param array $arguments
+     * @param array  $arguments
      * @return mixed
      */
     public function __call($name, $arguments)
     {
-        if($this->helperBroker===null) {
+        if ($this->_helperBroker === null) {
             throw new Vmvc_Exception('HelperBroker is not set.');
         }
-        return $this->helperBroker->callAlias($name, $arguments);
+        return $this->_helperBroker->callAlias($name, $arguments);
     }
 
     /**
-     *
      * @param Vmvc_ControllerCallObserverInterface $callObserver
      */
-    public function setCallObserver(Vmvc_ControllerCallObserverInterface $callObserver)
-    {
+    public function setCallObserver(
+        Vmvc_ControllerCallObserverInterface $callObserver
+    ) {
         $this->callObserver = $callObserver;
     }
 
     /**
-     * @throws Vmvc_Exception
      * @param string $controllerName
      * @param string $controllerAction
+     * @throws Vmvc_Exception
      */
     public function callController($controllerName, $controllerAction = null)
     {
-        if($this->callObserver===null) {
+        if ($this->callObserver === null) {
             throw new Vmvc_Exception('callObserver is not set.');
         }
         $this->callObserver->doExecute($controllerName, $controllerAction);
     }
 
+    /**
+     * @param string $viewScriptPath
+     */
     public function setViewScriptPath($viewScriptPath)
     {
-        if($this->callObserver===null) {
+        if ($this->callObserver === null) {
             throw new Vmvc_Exception('callObserver is not set.');
         }
 
         $this->callObserver->setViewScriptPath($viewScriptPath);
     }
 
-    protected function getControllerName()
+    public function getControllerName()
     {
         $controllerClass = get_class($this);
-        return str_replace('Controller', '', $controllerClass);
+        return str_replace('Controller_', '', $controllerClass);
     }
 
     // @codeCoverageIgnoreStart
