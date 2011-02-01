@@ -115,7 +115,7 @@ class Vmvc_Route
         }
 
         // dynamic
-        if(strpos($routeParam, ':')==0 && preg_match('/^[\w\-]+$/', $requestParam)==1) {
+        if(strpos($routeParam, ':') === 0 && preg_match('/^[\w\-]+$/', $requestParam)==1) {
             $routeParam = substr($routeParam, 1);
             $this->setOption($routeParam, $requestParam);
             return true;
@@ -172,6 +172,7 @@ class Vmvc_Route
 
     protected function getParamsFromUri($uri)
     {
+        $uri = urldecode($uri);
         // remove the ? seperator and parameters behind him
         $paramsExt = explode('?', $uri);
 

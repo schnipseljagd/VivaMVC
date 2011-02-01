@@ -67,17 +67,22 @@ class Vmvc_Request
      * @var array
      */
     protected $serverVars;
+    /**
+     * @var array
+     */
+    protected $fileVars;
 
     /**
      * @param array $vars
      * @param array $postVars
      * @param array $serverVars
      */
-    public function __construct(array $vars, array $postVars, array $serverVars)
+    public function __construct(array $vars, array $postVars, array $serverVars, array $fileVars = array())
     {
         $this->vars       = $vars;
         $this->postVars   = $postVars;
         $this->serverVars = $serverVars;
+        $this->fileVars   = $fileVars;
     }
 
     /**
@@ -153,6 +158,46 @@ class Vmvc_Request
     public function getPostVars()
     {
         return $this->postVars;
+    }
+
+    /**
+     * @param string $name
+     * @return mixed
+     */
+    public function getFileVar($name)
+    {
+        if(!isset($this->fileVars[$name])) {
+            return null;
+        }
+        return $this->fileVars[$name];
+    }
+
+    /**
+     * @return array
+     */
+    public function getFileVars()
+    {
+        return $this->fileVars;
+    }
+
+    /**
+     * @param string $name
+     * @return mixed
+     */
+    public function getServerVar($name)
+    {
+        if(!isset($this->serverVars[$name])) {
+            return null;
+        }
+        return $this->serverVars[$name];
+    }
+
+    /**
+     * @return array
+     */
+    public function getServerVars()
+    {
+        return $this->serverVars;
     }
 
     /**
