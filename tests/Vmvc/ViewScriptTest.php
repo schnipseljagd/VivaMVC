@@ -92,7 +92,7 @@ class Vmvc_ViewScriptTest extends VmvcTestCase
     public function testData()
     {
         $this->object->setData('test', 'testValue');
-        $this->assertEquals('testValue', $object->getData('test'));
+        $this->assertEquals('testValue', $this->object->getData('test'));
     }
 
     public function testGetDataWasNotFound()
