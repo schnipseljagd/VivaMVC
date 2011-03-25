@@ -57,7 +57,6 @@ class Vmvc_ActionControllerTest extends VmvcTestCase
 
     protected $requestMock;
     protected $responseMock;
-    protected $serviceProviderMock;
 
     /**
      * Sets up the fixture, for example, opens a network connection.
@@ -69,11 +68,8 @@ class Vmvc_ActionControllerTest extends VmvcTestCase
         $this->responseMock = $this->getMockWithoutDependencies(
             'Vmvc_Response'
         );
-        $this->serviceProviderMock = $this->getMock(
-            'Vmvc_ServiceProviderInterface'
-        );
         $this->object = new Vmvc_ActionController(
-            $this->requestMock, $this->responseMock, $this->serviceProviderMock
+            $this->requestMock, $this->responseMock
         );
     }
 

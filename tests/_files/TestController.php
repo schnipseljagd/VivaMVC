@@ -56,5 +56,21 @@
  */
 class Controller_Test extends Vmvc_Controller
 {
-    
+    /**
+     * @var ArrayObject
+     */
+    protected $arrayObject;
+
+    /**
+     * @param Vmvc_Request $request
+     * @param Vmvc_Response $response
+     * @param ArrayObject $arrayObject
+     */
+    public function  __construct(
+        Vmvc_Request $request, Vmvc_Response $response, ArrayObject $arrayObject
+    ) {
+        parent::__construct($request, $response);
+
+        $this->arrayObject = $arrayObject;
+    }
 }

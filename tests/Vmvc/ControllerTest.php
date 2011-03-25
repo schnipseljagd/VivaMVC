@@ -65,7 +65,6 @@ class Vmvc_ControllerTest extends VmvcTestCase
 
     protected $requestMock;
     protected $responseMock;
-    protected $serviceProviderMock;
 
     /**
      * Sets up the fixture, for example, opens a network connection.
@@ -77,13 +76,8 @@ class Vmvc_ControllerTest extends VmvcTestCase
         $this->responseMock = $this->getMockWithoutDependencies(
             'Vmvc_Response'
         );
-        $this->serviceProviderMock = $this->getMock(
-            'Vmvc_ServiceProviderInterface'
-        );
         $this->object = new Vmvc_Controller(
-            $this->requestMock,
-            $this->responseMock,
-            $this->serviceProviderMock
+            $this->requestMock, $this->responseMock
         );
     }
 
@@ -140,16 +134,6 @@ class Vmvc_ControllerTest extends VmvcTestCase
         $this->object->clearHeaders();
     }
 
-    public function testGetService()
-    {
-        $service = new stdClass();
-        $this->serviceProviderMock->expects($this->once())
-            ->method('getServiceObject')
-            ->with($this->equalTo('testservice'))
-            ->will($this->returnValue($service));
-        $this->assertSame($service, $this->object->get('testservice'));
-    }
-
     public function testSetHelperBroker()
     {
         $helperBrokerMock = $this->getMock('Vmvc_HelperBroker');
@@ -188,7 +172,7 @@ class Vmvc_ControllerTest extends VmvcTestCase
     public function testGetControllerWithNamespace()
     {
         $object = new Controller_Test(
-            $this->requestMock, $this->responseMock, $this->serviceProviderMock
+            $this->requestMock, $this->responseMock, new ArrayObject()
         );
         $this->assertEquals('Test', $object->getControllerName());
     }
@@ -198,6 +182,10 @@ class Vmvc_ControllerTest extends VmvcTestCase
         $this->assertEquals(
             'Vmvc_Controller', $this->object->getControllerName()
         );
+    }
+
+    public function testExecute()
+    {
     }
 }
 ?>
