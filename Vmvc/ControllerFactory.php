@@ -157,6 +157,8 @@ class Vmvc_ControllerFactory
             $controller->setHelperBroker($this->helperBroker);
         }
 
+        $controller->init();
+
         return $controller;
     }
 

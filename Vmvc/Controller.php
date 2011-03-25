@@ -83,8 +83,6 @@ class Vmvc_Controller
     {
         $this->request = $request;
         $this->response = $response;
-        
-        $this->init();
     }
 
     /**
@@ -212,7 +210,7 @@ class Vmvc_Controller
      * Override this method.
      * Init is called at the end of the constructor
      */
-    protected function init()
+    public function init()
     {
     }
 

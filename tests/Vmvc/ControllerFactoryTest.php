@@ -44,6 +44,7 @@
 
 require_once 'tests/VmvcTestCase.php';
 require_once 'tests/_files/TestController.php';
+require_once 'tests/_files/TestControllerWithHelperCallAtInit.php';
 
 /**
  * ControllerFactoryTest
@@ -189,6 +190,16 @@ class Vmvc_ControllerFactoryTest extends VmvcTestCase
         );
         $controller = $this->object->getInstance('Controller_Test', $args);
         $this->assertInstanceOf('Controller_Test', $controller);
+    }
+
+    public function testGetControllerInitCall()
+    {
+        $helperBrokerMock = $this->getMock('Vmvc_HelperBroker');
+        $helperBrokerMock->expects($this->once())
+            ->method('callAlias')
+            ->with($this->equalTo('test'));
+        $this->object->setHelperBroker($helperBrokerMock);
+        $this->object->getController('TestControllerWithHelperCallAtInit');
     }
 }
 ?>
