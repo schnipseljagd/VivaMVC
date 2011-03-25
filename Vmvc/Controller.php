@@ -69,6 +69,10 @@ class Vmvc_Controller
      */
     protected $callObserver;
     /**
+     * @var Vmvc_ServiceProviderInterface
+     */
+    private $serviceProvider;
+    /**
      * @var Vmvc_HelperBroker
      */
     private $_helperBroker;
@@ -76,13 +80,18 @@ class Vmvc_Controller
     /**
      * The naming of further parameters should be care the naming convention of
      * the services, that will be called automatically.
-     * @param Vmvc_Request  $request
-     * @param Vmvc_Response $response
+     * @param Vmvc_Request                  $request
+     * @param Vmvc_Response                 $response
+     * @param Vmvc_ServiceProviderInterface $serviceProvider
      */
-    public function __construct(Vmvc_Request $request, Vmvc_Response $response)
-    {
+    public function __construct(
+        Vmvc_Request $request,
+        Vmvc_Response $response,
+        Vmvc_ServiceProviderInterface $serviceProvider
+    ) {
         $this->request = $request;
         $this->response = $response;
+        $this->serviceProvider = $serviceProvider;
         
         $this->init();
     }
@@ -143,6 +152,15 @@ class Vmvc_Controller
     public function clearHeaders()
     {
         $this->response->clearHeaders();
+    }
+
+    /**
+     * @param  $serviceId
+     * @return object
+     */
+    public function get($serviceId)
+    {
+        return $this->serviceProvider->getServiceObject($serviceId);
     }
 
     /**
