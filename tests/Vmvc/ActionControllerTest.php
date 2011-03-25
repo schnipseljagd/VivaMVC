@@ -68,8 +68,11 @@ class Vmvc_ActionControllerTest extends VmvcTestCase
         $this->responseMock = $this->getMockWithoutDependencies(
             'Vmvc_Response'
         );
+        $this->serviceProviderMock = $this->getMock(
+            'Vmvc_ServiceProviderInterface'
+        );
         $this->object = new Vmvc_ActionController(
-            $this->requestMock, $this->responseMock
+            $this->requestMock, $this->responseMock, $this->serviceProviderMock
         );
     }
 

@@ -76,8 +76,11 @@ class Vmvc_ControllerTest extends VmvcTestCase
         $this->responseMock = $this->getMockWithoutDependencies(
             'Vmvc_Response'
         );
+        $this->serviceProviderMock = $this->getMock(
+            'Vmvc_ServiceProviderInterface'
+        );
         $this->object = new Vmvc_Controller(
-            $this->requestMock, $this->responseMock
+            $this->requestMock, $this->responseMock, $this->serviceProviderMock
         );
     }
 
@@ -134,6 +137,16 @@ class Vmvc_ControllerTest extends VmvcTestCase
         $this->object->clearHeaders();
     }
 
+    public function testGetService()
+    {
+        $service = new stdClass();
+        $this->serviceProviderMock->expects($this->once())
+            ->method('getServiceObject')
+            ->with($this->equalTo('test.service.id'))
+            ->will($this->returnValue($service));
+        $this->assertSame($service, $this->object->get('test.service.id'));
+    }
+
     public function testSetHelperBroker()
     {
         $helperBrokerMock = $this->getMock('Vmvc_HelperBroker');
@@ -172,7 +185,7 @@ class Vmvc_ControllerTest extends VmvcTestCase
     public function testGetControllerWithNamespace()
     {
         $object = new Controller_Test(
-            $this->requestMock, $this->responseMock, new ArrayObject()
+            $this->requestMock, $this->responseMock, $this->serviceProviderMock
         );
         $this->assertEquals('Test', $object->getControllerName());
     }

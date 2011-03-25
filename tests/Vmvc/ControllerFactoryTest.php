@@ -79,12 +79,11 @@ class Vmvc_ControllerFactoryTest extends VmvcTestCase
         $this->responseMock = $this->getMockWithoutDependencies(
             'Vmvc_Response'
         );
-        $this->object = new Vmvc_ControllerFactory(
-            $this->requestMock, $this->responseMock
-        );
-
         $this->serviceProviderMock = $this->getMock(
             'Vmvc_ServiceProviderInterface'
+        );
+        $this->object = new Vmvc_ControllerFactory(
+            $this->requestMock, $this->responseMock, $this->serviceProviderMock
         );
     }
 
@@ -102,48 +101,6 @@ class Vmvc_ControllerFactoryTest extends VmvcTestCase
         $this->object->getController(1);
     }
 
-    public function testGetControllerWithServiceParam()
-    {
-        $serviceProviderMock = $this->serviceProviderMock;
-        $serviceProviderMock->expects($this->at(0))
-            ->method('getServiceObject')
-            ->with($this->equalTo('request'))
-            ->will(
-                $this->returnValue(
-                    $this->getMockWithoutDependencies(
-                        'Vmvc_Request'
-                    )
-                )
-            );
-
-        $serviceProviderMock->expects($this->at(1))
-            ->method('getServiceObject')
-            ->with($this->equalTo('response'))
-            ->will(
-                $this->returnValue(
-                    $this->getMock('Vmvc_Response')
-                )
-            );
-
-        $serviceProviderMock->expects($this->at(2))
-            ->method('getServiceObject')
-            ->with($this->equalTo('arrayObject'))
-            ->will($this->returnValue(new ArrayObject()));
-
-        $this->object->setServiceProvider($serviceProviderMock);
-        
-        $controller = $this->object->getController('test');
-        $this->assertInstanceOf('Vmvc_Controller', $controller);
-    }
-
-    /**
-     * @expectedException Vmvc_Exception
-     */
-    public function testGetControllerWithMissingServiceContainer()
-    {
-        $this->object->getController('test');
-    }
-
     /**
      * @expectedException InvalidArgumentException
      */
@@ -152,47 +109,7 @@ class Vmvc_ControllerFactoryTest extends VmvcTestCase
          $this->object->getController('~');
     }
 
-    /**
-     * @expectedException RuntimeException
-     */
-    public function testGetControllerWithMissingServiceName()
-    {
-        $serviceProviderMock = $this->serviceProviderMock;
-        $serviceProviderMock->expects($this->at(0))
-            ->method('getServiceObject')
-            ->with($this->equalTo('request'))
-            ->will($this->returnValue(null));
-
-        $this->object->setServiceProvider($serviceProviderMock);
-
-        $controller = $this->object->getController('test');
-    }
-
-    public function testGetInstance()
-    {
-        $controller = $this->object->getInstance('Vmvc_Controller');
-        $this->assertInstanceOf('Vmvc_Controller', $controller);
-    }
-
-    public function testGetInstanceWithHelperBroker()
-    {
-        $helperBrokerMock = $this->getMock('Vmvc_HelperBroker');
-        $this->object->setHelperBroker($helperBrokerMock);
-        $this->object->getInstance('Vmvc_Controller');
-    }
-
-    public function testGetInstanceWithArgs()
-    {
-        $args = array(
-            $this->requestMock,
-            $this->responseMock,
-            new ArrayObject()
-        );
-        $controller = $this->object->getInstance('Controller_Test', $args);
-        $this->assertInstanceOf('Controller_Test', $controller);
-    }
-
-    public function testGetControllerInitCall()
+    public function testGetControllerInitCallWithHelperBroker()
     {
         $helperBrokerMock = $this->getMock('Vmvc_HelperBroker');
         $helperBrokerMock->expects($this->once())

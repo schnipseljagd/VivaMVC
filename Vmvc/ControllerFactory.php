@@ -75,21 +75,17 @@ class Vmvc_ControllerFactory
     protected $helperBroker;
 
     /**
-     * @param Vmvc_Request $request
-     * @param Vmvc_Response $response
-     */
-    public function __construct(Vmvc_Request $request, Vmvc_Response $response)
-    {
-        $this->request = $request;
-        $this->response = $response;
-    }
-
-    /**
+     * @param Vmvc_Request                  $request
+     * @param Vmvc_Response                 $response
      * @param Vmvc_ServiceProviderInterface $serviceProvider
      */
-    public function setServiceProvider(
+    public function __construct(
+        Vmvc_Request $request,
+        Vmvc_Response $response,
         Vmvc_ServiceProviderInterface $serviceProvider
     ) {
+        $this->request = $request;
+        $this->response = $response;
         $this->serviceProvider = $serviceProvider;
     }
 
@@ -109,56 +105,14 @@ class Vmvc_ControllerFactory
      */
     public function getController($type = '')
     {
-        $controllerName = $this->getControllerName($type);
-        $controllerConstructorReflection = $this->getConstructorReflection(
-            $controllerName
+        $controllerClass = $this->getControllerName($type);
+        $controller = new $controllerClass(
+            $this->request, $this->response, $this->serviceProvider
         );
-
-        $params = $controllerConstructorReflection->getParameters();
-
-        // instantiate controller with params Vmvc_Request and Vmvc_Response
-        if (count($params) == 2
-            && $params[0]->getClass()->name == 'Vmvc_Request'
-            && $params[1]->getClass()->name == 'Vmvc_Response'
-        ) {
-            return $this->getInstance($controllerName);
-        }
-
-        // instantiate controller with more params
-        if ($this->serviceProvider !== null) {
-            $args = $this->getServiceObjects($controllerConstructorReflection);
-
-            return $this->getInstance($controllerName, $args);
-        }
-
-        // care no other options
-        throw new Vmvc_Exception(
-            'Controller could not instantiated. ' .
-            'Perhaps set the ServiceContainer?'
-        );
-    }
-
-    /**
-     * @param string $controllerName
-     * @param array|null $args
-     * @return Vmvc_Controller
-     * @throws InvalidArgumentException
-     */
-    public function getInstance($controllerName, $args = null)
-    {
-        if ($args === null) {
-            $args = array($this->request, $this->response);
-        }
-
-        $controllerReflection = new ReflectionClass($controllerName);
-        $controller = $controllerReflection->newInstanceArgs($args);
-
         if ($this->helperBroker !== null) {
             $controller->setHelperBroker($this->helperBroker);
         }
-
         $controller->init();
-
         return $controller;
     }
 
@@ -183,42 +137,5 @@ class Vmvc_ControllerFactory
         }
 
         return $controllerName;
-    }
-
-    /**
-     * @param string $controllerName
-     * @return ReflectionMethod
-     */
-    protected function getConstructorReflection($controllerName)
-    {        
-        $controllerReflection = new ReflectionClass($controllerName);
-        $constructor = $controllerReflection->getConstructor();
-        return $constructor;
-    }
-
-    /**
-     * Get the service objects needed by the controller
-     * @param ReflectionMethod $constructorReflection
-     * @return array
-     */
-    protected function getServiceObjects(
-        ReflectionMethod $constructorReflection
-    ) {
-        $paramServiceObjects = array();
-        $parameters = $constructorReflection->getParameters();
-        
-        foreach ($parameters as $parameter) {
-            $serviceObject = $this->serviceProvider
-                ->getServiceObject($parameter->name);
-            
-            if (!is_object($serviceObject)) {
-                throw new RuntimeException(
-                    'Service has to return an object. id: ' . $parameter->name
-                );
-            }
-            $paramServiceObjects[] = $serviceObject;
-        }
-
-        return $paramServiceObjects;
     }
 }
